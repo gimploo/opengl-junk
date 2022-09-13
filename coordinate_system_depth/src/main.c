@@ -1,4 +1,4 @@
-#define WINDOW_GLFW
+#define WINDOW_SDL
 #include <poglib/application.h>
 
 typedef struct content_t {
@@ -32,21 +32,19 @@ void coordinate_system_depth_update(application_t *app)
     matrix4f_t projection = MATRIX4F_IDENTITY;
 
     static f32 scale = -3.0f;
-    if (window_keyboard_is_key_pressed(win, 'W'))
+    if (window_keyboard_is_key_pressed(win, SDLK_w))
     {
         printf("-\n");
         scale -= 0.2f;
     }
-    if (window_keyboard_is_key_pressed(win, 'S'))
+    if (window_keyboard_is_key_pressed(win, SDLK_s))
     {
         printf("+\n");
         scale += 0.2f;
     }
 
-    const f32 tick = application_get_tick(app);
-    printf("TICK: %f\n", tick);
-    model = glms_rotate(model, tick, (vec3f_t ){0.5f, 1.0f, 0.0f});
-    view  = glms_translate(view, (vec3f_t ){0.0f, 0.0f, -3.0f});
+    model = glms_rotate(model, stopwatch_get_tick_in_seconds(), (vec3f_t ){0.5f, 1.0f, 0.0f});
+    view  = glms_translate(view, (vec3f_t ){0.0f, 0.0f, scale});
     projection = glms_perspective(glm_rad(45.0f), app->window.aspect_ratio, 0.1f, 100.0f);
 
     matrix4f_print("Model", model);
